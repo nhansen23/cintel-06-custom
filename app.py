@@ -85,5 +85,6 @@ with ui.card(full_screen=True, min_height="60%"):
             
         # https://shiny.posit.co/py/components/outputs/plot-plotly/
 
+# https://shiny.posit.co/py/components/outputs/data-grid/
 with ui.card(full_screen=True, min_height="40%"):
     ui.card_header("Geyser Activity Data Table")
