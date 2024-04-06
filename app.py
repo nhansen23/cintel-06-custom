@@ -1,6 +1,7 @@
 # PyShiny Imports
 from shiny import reactive, render
 from shiny.express import ui
+from shinyswatch import theme
 
 # Python Standard Library Imports
 import random
@@ -35,11 +36,22 @@ ui.page_opts(title="Geyser Activity", fillable=True)
 # UI Sidebar
 with ui.sidebar(open="open"):
 
-  ui.input_select(
-    "Select",
+    ui.input_select(
+    "select",
     "Select Duration Type",
     {"Long":"Long","Short":"Short"}
-  )
+    )
+
+    ui.hr()
+    
+    ui.input_slider(
+        "slider",
+        "Select Wait Time Range",
+        0,100,50
+    )
+
+# UI Main Panel
+
   
 # UI Main Panel
 
