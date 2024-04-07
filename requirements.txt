@@ -1,7 +1,9 @@
 shiny
+shinywidgets
 shinyswatch
 pandas
 faicons
 Image
 urlopen
 seaborn
+plotly
