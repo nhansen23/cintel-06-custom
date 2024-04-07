@@ -7,3 +7,4 @@ Image
 urlopen
 seaborn
 plotly
+scipy
