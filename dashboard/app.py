@@ -30,8 +30,10 @@ df = sns.load_dataset("geyser")
 theme.sandstone
 
 # Reactive calc to be called by UI output components
-# @reactive.calc()
-# def reactive_calc():
+@reactive.calc
+def filtered_select_data():
+    kindMatch = df["kind"].isin(input.input_select())
+    return df[kindMatch]
 
 # UI Page Layout
 ui.page_opts(title="Geyser Activity", fillable=True)
