@@ -13,6 +13,7 @@ from scipy import stats
 
 # Pandas import for data
 import pandas as pd
+import seaborn as sns
 
 # Icons import
 from faicons import icon_svg
@@ -23,6 +24,8 @@ from PIL import Image
 # ----------------------------------------------------------------------------------
  # Seaborn Datafile: https://github.com/mwaskom/seaborn-data/blob/master/geyser.csv
 # ----------------------------------------------------------------------------------
+
+df = sns.load_dataset("geyser")
 
 theme.sandstone
 
