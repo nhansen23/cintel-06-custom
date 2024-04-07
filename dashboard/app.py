@@ -21,13 +21,15 @@ from faicons import icon_svg
 from urllib.request import urlopen
 from PIL import Image
 
-# ----------------------------------------------------------------------------------
- # Seaborn Datafile: https://github.com/mwaskom/seaborn-data/blob/master/geyser.csv
-# ----------------------------------------------------------------------------------
+# Set Theme
+theme.sandstone
+
+# ---------------------------------------------------------------------------------
+# Seaborn Datafile: https://github.com/mwaskom/seaborn-data/blob/master/geyser.csv
+# ---------------------------------------------------------------------------------
 
 df = sns.load_dataset("geyser")
 
-theme.sandstone
 
 # Reactive calc to be called by UI output components
 @reactive.calc
@@ -38,10 +40,8 @@ def filtered_select_data():
 # UI Page Layout
 ui.page_opts(title="Geyser Activity", fillable=True)
 
-# UI Page Inputs
-
-
 # UI Sidebar
+# UI Page Inputs
 with ui.sidebar(open="open"):
 
     # https://shiny.posit.co/py/components/inputs/select-single/
@@ -62,9 +62,9 @@ with ui.sidebar(open="open"):
 
     ui.h2()
     
-    @render.image
-    def image():
-        img = Image.open(urlopen("https://static.vecteezy.com/system/resources/previews/000/304/383/original/water-comping-out-of-the-ground-vector.jpg"))
+#    @render.image
+#    def image():
+#        img = Image.open(urlopen("https://static.vecteezy.com/system/resources/previews/000/304/383/original/water-comping-out-of-the-ground-vector.jpg"))
 
 # UI Main Panel
 with ui.card(full_screen=True, min_height="60%"):
