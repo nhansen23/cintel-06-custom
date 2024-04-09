@@ -52,7 +52,7 @@ with ui.sidebar(open="open"):
     ui.input_slider(
         "slider",
         "Select Wait Time Range",
-        0,100,50
+        min=0,max=geyser_df['waiting'].max(),value=[geyser_df['waiting'].max()/6, geyser_df['waiting'].max()/1.5]
     )
 
     ui.hr()
