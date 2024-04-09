@@ -40,8 +40,8 @@ ui.page_opts(title="Geyser Activity", fillable=True)
 with ui.sidebar(open="open"):
 
     # https://shiny.posit.co/py/components/inputs/select-single/
-    ui.input_select(
-    "select",
+    ui.input_radio_buttons(
+    "selected_duration",
     "Select Duration Type",
     {"long":"Long","short":"Short","both": "Both"}
     )
@@ -70,12 +70,12 @@ with ui.sidebar(open="open"):
 
         @render.ui
         def avg_dur():
-            if ui.input_select == "long":
-                return f"{round(geyser_df.loc[geyser_df['kind']== 'long','duration'].mean(),2)} seconds"
-            elif ui.input_select == "short":
+            if input.selected_duration() == "long":
+                return f"{round(geyser_df.loc[geyser_df['kind'] == 'long','duration'].mean(),2)} seconds"
+            elif input.selected_duration() == "short":
                 return f"{round(geyser_df.loc[geyser_df['kind'] == 'short','duration'].mean(),2)} seconds"
-            elif ui.input_select == "both":
-                return f"{round(geyser_df.loc['duration'].mean(),2)} seconds"   
+            elif input.selected_duration() == "both":
+                return f"{round(geyser_df['duration'].mean(),2)} seconds"   
         
     with ui.value_box(
         theme="bg-gradient-blue-red",
@@ -85,21 +85,19 @@ with ui.sidebar(open="open"):
 
         @render.ui
         def avg_wait():
-            if ui.input_select == "long":
+            if input.selected_duration() == "long":
                 return f"{round(geyser_df.loc[geyser_df['kind'] == 'long','waiting'].mean(),2)} minutes"
-            elif ui.input_select == "short":
+            elif input.selected_duration() == "short":
                 return f"{round(geyser_df.loc[geyser_df['kind'] == 'short','waiting'].mean(),2)} minutes"
-            elif ui.input_select == "both":
-                return f"{round(geyser_df.loc['waiting'].mean(),2)} minutes"
+            elif input.selected_duration() == "both":
+                return f"{round(geyser_df['waiting'].mean(),2)} minutes"
 
 # UI Main Panel
-with ui.card(full_screen=True, min_height="60%"):    
+with ui.card(full_screen=True, min_height="50%"):    
     ui.card_header("Geyser Duration Chart")
     @render_plotly
     def display_plot(height="100%"):
         # Fetch from the reactive calc function
-            #deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
-            #geyser_df
 
             # Ensure the DataFrame is not empty before plotting
             #if not geyser_df.empty:
@@ -108,7 +106,8 @@ with ui.card(full_screen=True, min_height="60%"):
             
             # https://shiny.posit.co/py/components/outputs/plot-plotly/
             # Create scatter plot for readings
-            fig = px.scatter(geyser_df,
+            fig = px.scatter(
+                data_frame=filtered_duration_df(),
                 x="duration",
                 y="waiting",
                 color="kind",
@@ -119,18 +118,19 @@ with ui.card(full_screen=True, min_height="60%"):
             return fig
         
 # https://shiny.posit.co/py/components/outputs/data-grid/
-with ui.card(full_screen=True, min_height="40%"):
+with ui.card(full_screen=True, min_height="50%"):
     ui.card_header("Geyser Activity Data Table")
-
     @render.data_frame
     def display_data():
-        return render.DataGrid(select_data_df(), width="100%")
+        return render.DataGrid(filtered_duration_df(), width="100%")
 
+# Reactive calc to filter the data based upon the inputs
 @reactive.calc
-def select_data_df():
-    if ui.input_select == 'Long' or ui.input_select == 'Short':
-        filtered_data = geyser_df["kind"].isin(input.input_select())
-        return geyser_df[filtered_data]
+def filtered_duration_df():
+    if input.selected_duration() == 'both':
+        filtered_data = geyser_df
+        return filtered_data
     else:
-        return geyser_df
+        filtered_data = geyser_df["kind"].isin(input.selected_duration())
+        return geyser_df[filtered_data]
 
