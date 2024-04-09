@@ -66,26 +66,36 @@ with ui.sidebar(open="open"):
 #        img = Image.open(urlopen("https://static.vecteezy.com/system/resources/previews/000/304/383/original/water-comping-out-of-the-ground-vector.jpg"))
 
 # UI Main Panel
-with ui.card(full_screen=True, min_height="60%"):
-    ui.card_header("Geyser Duration Chart")
-
-    with ui.layout_columns(col_widths=(4, 8)):
-        with ui.value_box(
-            theme="bg-gradient-blue-red",
+    with ui.value_box(
+        theme="bg-gradient-blue-red",
         ):
-            "Geyser Type - Long"
+        "Geyser Type - Long"
 
-            ui.hr()
-            @render.ui
-            def long_wait():
-                return f"Avg Wait Time: {round(long_avg_wait,1)} minutes"
+        @render.ui
+        def long_wait():
+            return f"Avg Wait Time: {round(long_avg_wait,1)} minutes"
         
-            @render.ui
-            def long_dur():
-                return f"Avg Duration: {round(long_avg_dur,1)} seconds"
-     
-        @render_plotly
-        def display_plot():
+        @render.ui
+        def long_dur():
+            return f"Avg Duration: {round(long_avg_dur,1)} seconds"
+        
+    with ui.value_box(
+        theme="bg-gradient-red-blue",
+        ):
+        "Geyser Type - Short"
+
+        @render.ui
+        def short_wait():
+            return f"Avg Wait Time: {round(short_avg_wait,1)} minutes"
+           
+        @render.ui
+        def short_dur():
+            return f"Avg Duration: {round(short_avg_dur,1)} seconds"
+    
+with ui.card(full_screen=True, min_height="60%"):    
+    ui.card_header("Geyser Duration Chart")
+    @render_plotly
+    def display_plot(height="100%"):
         # Fetch from the reactive calc function
             #deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
             #geyser_df
@@ -108,20 +118,7 @@ with ui.card(full_screen=True, min_height="60%"):
 
             return fig
         
-        with ui.value_box(
-            theme="bg-gradient-red-blue",
-        ):
-            "Geyser Type - Short"
-
-            ui.hr()
-            @render.ui
-            def short_wait():
-                return f"Avg Wait Time: {round(short_avg_wait,1)} minutes"
-        
-            @render.ui
-            def short_dur():
-                return f"Avg Duration: {round(short_avg_dur,1)} seconds"
-    
+      
    
 
 # https://shiny.posit.co/py/components/outputs/data-grid/
