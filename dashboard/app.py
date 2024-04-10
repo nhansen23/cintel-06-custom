@@ -145,6 +145,6 @@ def filtered_duration_df():
         filtered_data = geyser_df
         return filtered_data 
     else:    
-        filtered_data = geyser_df[geyser_df["kind"].isin(input.duration())]
+        filtered_data = geyser_df[geyser_df["kind"] == input.duration()]
         return filtered_data
 
