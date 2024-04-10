@@ -41,9 +41,10 @@ with ui.sidebar(open="open"):
 
     # https://shiny.posit.co/py/components/inputs/select-single/
     ui.input_radio_buttons(
-    "selected_duration",
+    "duration",
     "Select Duration Type",
-    {"long":"Long","short":"Short","both": "Both"}
+    {"long":"Long","short":"Short","both": "Both"},
+    selected="both",
     )
     
     ui.hr()
@@ -61,38 +62,40 @@ with ui.sidebar(open="open"):
 #    def image():
 #        img = Image.open(urlopen("https://static.vecteezy.com/system/resources/previews/000/304/383/original/water-comping-out-of-the-ground-vector.jpg"))
 
-# Add value boxes to show average wait and duration times for each geyser activity type
-    with ui.value_box(
-        theme="bg-gradient-blue-red",
-        ):
 
-        "Average Duration"
 
-        @render.ui
-        def avg_dur():
-            if input.selected_duration() == "long":
-                return f"{round(geyser_df.loc[geyser_df['kind'] == 'long','duration'].mean(),2)} seconds"
-            elif input.selected_duration() == "short":
-                return f"{round(geyser_df.loc[geyser_df['kind'] == 'short','duration'].mean(),2)} seconds"
-            elif input.selected_duration() == "both":
-                return f"{round(geyser_df['duration'].mean(),2)} seconds"   
-        
-    with ui.value_box(
-        theme="bg-gradient-blue-red",
-        ):
-        
-        "Average Wait Time"
-
-        @render.ui
-        def avg_wait():
-            if input.selected_duration() == "long":
-                return f"{round(geyser_df.loc[geyser_df['kind'] == 'long','waiting'].mean(),2)} minutes"
-            elif input.selected_duration() == "short":
-                return f"{round(geyser_df.loc[geyser_df['kind'] == 'short','waiting'].mean(),2)} minutes"
-            elif input.selected_duration() == "both":
-                return f"{round(geyser_df['waiting'].mean(),2)} minutes"
 
 # UI Main Panel
+# Add value boxes to show average wait and duration times for each geyser activity type
+with ui.layout_column_wrap(fill=False):
+    with ui.value_box(showcase=icon_svg("hourglass-end"),
+        theme="bg-gradient-blue-red",
+        ):
+        "Average Duration"
+
+        @render.text
+        def avg_dur():
+            if input.duration() == "long":
+                return f"{geyser_df.loc[geyser_df['kind'] == 'long','duration'].mean():.2f} seconds"
+            elif input.duration() == "short":
+                return f"{geyser_df.loc[geyser_df['kind'] == 'short','duration'].mean():.2f} seconds"
+            elif input.duration() == "both":
+                return f"{geyser_df['duration'].mean():.2f} seconds"   
+        
+    with ui.value_box(showcase=icon_svg("spinner"),
+        theme="bg-gradient-blue-red",
+        ):
+        "Average Wait Time"
+
+        @render.text
+        def avg_wait():
+            if input.duration() == "long":
+                return f"{geyser_df.loc[geyser_df['kind'] == 'long','waiting'].mean():.1f} minutes"
+            elif input.duration() == "short":
+                return f"{geyser_df.loc[geyser_df['kind'] == 'short','waiting'].mean():.1f} minutes"
+            elif input.duration() == "both":
+                return f"{geyser_df['waiting'].mean():.1f} minutes"
+
 with ui.card(full_screen=True, min_height="50%"):    
     ui.card_header("Geyser Duration Chart")
     @render_plotly
@@ -118,19 +121,30 @@ with ui.card(full_screen=True, min_height="50%"):
             return fig
         
 # https://shiny.posit.co/py/components/outputs/data-grid/
-with ui.card(full_screen=True, min_height="50%"):
-    ui.card_header("Geyser Activity Data Table")
-    @render.data_frame
-    def display_data():
-        return render.DataGrid(filtered_duration_df(), width="100%")
+with ui.layout_column_wrap():
+    with ui.card(full_screen=True, min_height="50%"):
+        ui.card_header("Geyser Activity Data Table")
+        
+        @render.data_frame
+        def display_data():
+            return render.DataGrid(filtered_duration_df(), width="100%")
+    
+    # Placeholder to simulate obtaining the latest geyser activity recordings
+    with ui.card(full_screen=True, min_height="50%"):
+        ui.card_header("Latest Recordings")
+        
+        @render.data_frame
+        def display_latest():
+            return render.DataGrid(geyser_df.iloc[5:])
+
 
 # Reactive calc to filter the data based upon the inputs
 @reactive.calc
 def filtered_duration_df():
-    if input.selected_duration() == 'both':
+    if input.duration() == "both":
         filtered_data = geyser_df
+        return filtered_data 
+    else:    
+        filtered_data = geyser_df[geyser_df["kind"].isin(input.duration())]
         return filtered_data
-    else:
-        filtered_data = geyser_df["kind"].isin(input.selected_duration())
-        return geyser_df[filtered_data]
 
