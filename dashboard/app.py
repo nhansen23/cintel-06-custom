@@ -121,7 +121,7 @@ with ui.card(full_screen=True, min_height="50%"):
             return fig
         
 # https://shiny.posit.co/py/components/outputs/data-grid/
-with ui.layout_column_wrap():
+with ui.layout_columns(col_widths=(8, 4)):
     with ui.card(full_screen=True, min_height="50%"):
         ui.card_header("Geyser Activity Data Table")
         
