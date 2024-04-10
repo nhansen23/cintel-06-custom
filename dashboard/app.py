@@ -2,6 +2,7 @@
 from shiny import reactive, render
 from shiny.express import ui, input
 from shinyswatch import theme
+# from shiny.types import ImgData
 
 # Python Standard Library Imports
 import random
@@ -19,7 +20,6 @@ import seaborn as sns
 from faicons import icon_svg
 
 from urllib.request import urlopen
-from PIL import Image
 
 # Set Theme
 theme.sandstone
@@ -33,12 +33,15 @@ geyser_df = sns.load_dataset("geyser")
 # UI Page Layout
 ui.page_opts(title="Geyser Activity", fillable=True)
 
-# Reactive calc to filter by user selection on duration type
-
 # UI Sidebar
-# UI Page Inputs
 with ui.sidebar(open="open"):
 
+#    @render.image 
+#    def image():
+#        img: ImgData = {"src": "https://cdn.britannica.com/38/94438-050-1A943B1D/Old-Faithful-geyser-Yellowstone-National-Park-Wyoming.jpg", "width": "100px"}
+#        return img
+        
+    # UI Page Input
     # https://shiny.posit.co/py/components/inputs/select-single/
     ui.input_radio_buttons(
     "duration",
@@ -46,24 +49,6 @@ with ui.sidebar(open="open"):
     {"long":"Long","short":"Short","both": "Both"},
     selected="both",
     )
-    
-    ui.hr()
-
-    # https://shiny.posit.co/py/components/inputs/slider/
-    ui.input_slider(
-        "slider",
-        "Select Wait Time Range",
-        min=0,max=geyser_df['waiting'].max(),value=[geyser_df['waiting'].max()/6, geyser_df['waiting'].max()/1.5]
-    )
-
-    ui.hr()
-
-#    @render.image
-#    def image():
-#        img = Image.open(urlopen("https://static.vecteezy.com/system/resources/previews/000/304/383/original/water-comping-out-of-the-ground-vector.jpg"))
-
-
-
 
 # UI Main Panel
 # Add value boxes to show average wait and duration times for each geyser activity type
@@ -97,7 +82,7 @@ with ui.layout_column_wrap(fill=False):
                 return f"{geyser_df['waiting'].mean():.1f} minutes"
 
 with ui.card(full_screen=True, min_height="50%"):    
-    ui.card_header("Geyser Duration Chart")
+    ui.card_header("Geyser Duration Chart", class_="text-bg-secondary p-3")
     @render_plotly
     def display_plot(height="100%"):
         # Fetch from the reactive calc function
@@ -123,7 +108,7 @@ with ui.card(full_screen=True, min_height="50%"):
 # https://shiny.posit.co/py/components/outputs/data-grid/
 with ui.layout_columns(col_widths=(8, 4)):
     with ui.card(full_screen=True, min_height="50%"):
-        ui.card_header("Geyser Activity Data Table")
+        ui.card_header("Geyser Activity Data Table", class_="text-bg-secondary p-3")
         
         @render.data_frame
         def display_data():
@@ -131,7 +116,7 @@ with ui.layout_columns(col_widths=(8, 4)):
     
     # Placeholder to simulate obtaining the latest geyser activity recordings
     with ui.card(full_screen=True, min_height="50%"):
-        ui.card_header("Latest Recordings")
+        ui.card_header("Latest Recordings", class_="text-bg-secondary p-3")
         
         @render.data_frame
         def display_latest():
@@ -147,4 +132,3 @@ def filtered_duration_df():
     else:    
         filtered_data = geyser_df[geyser_df["kind"] == input.duration()]
         return filtered_data
-
