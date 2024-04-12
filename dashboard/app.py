@@ -29,6 +29,10 @@ theme.sandstone
 # ---------------------------------------------------------------------------------
 
 geyser_df = sns.load_dataset("geyser")
+short_wait = geyser_df["waiting"].min()
+long_wait = geyser_df["waiting"].max()
+short_dur = geyser_df["duration"].min()
+long_dur = geyser_df["duration"].max()
 
 UPDATE_INTERVAL_SECS: int = 2
 
@@ -76,37 +80,36 @@ with ui.sidebar(open="open"):
     )
 
     ui.hr()
-    
-# Display duration and wait times
-    with ui.card():
-        ui.card_header("Shortest Wait Time")
-        @render.text
-        def wait_min_text():
-            return wait_min()
 
 # Display duration and wait times
-    with ui.card():
-        ui.card_header("Longest Wait Time")
+    with ui.layout_column_wrap(width=1 / 2): 
+        with ui.card():
+            ui.card_header("Shortest Wait Time")
+            @render.text
+            def wait_min_text():
+                return short_wait
+
+# Display duration and wait times
+        with ui.card():
+            ui.card_header("Longest Wait Time")
         
-        @render.text
-        def wait_max_text():
-            return wait_max()
-
-    ui.hr()
+            @render.text
+            def wait_max_text():
+                return long_wait
 
 # Display duration and wait times
-    with ui.card():
-        ui.card_header("Shortest Duration")
-        @render.text
-        def dur_min_text():
-            return dur_min()
+        with ui.card():
+            ui.card_header("Shortest Duration")
+            @render.text
+            def dur_min_text():
+                return short_dur
 
 # Display duration and wait times
-    with ui.card():
-        ui.card_header("Longest Duration")
-        @render.text
-        def dur_max_text():
-            return dur_max()
+        with ui.card():
+            ui.card_header("Longest Duration")
+            @render.text
+            def dur_max_text():
+                return long_dur
 
 # UI Main Panel
 # Add value boxes to show average wait and duration times for each geyser activity type
