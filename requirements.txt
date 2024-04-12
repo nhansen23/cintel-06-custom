@@ -9,4 +9,8 @@ urlopen
 seaborn
 plotly
 scipy
+<<<<<<< HEAD
 statsmodels
+=======
+statsmodels
+>>>>>>> 5c1232d9e11c861122fdc26b4566ea0a64e81a4d

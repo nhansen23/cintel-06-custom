@@ -45,7 +45,7 @@ def reactive_recordings():
 
     # Data grid data generation
     duration = round(random.uniform(input.short_dur(),input.long_dur()),3)
-    waiting = round(random.uniform(input.short_wait(),input.long_wait()),0)
+    waiting = random.randint(input.short_wait(),input.long_wait())
     kind = random.choice(["short","long"])
     new_recording_entry = {"duration":duration, "waiting":waiting, "kind":kind}
 
@@ -84,14 +84,14 @@ with ui.sidebar(open="open"):
 # Display duration and wait times
     with ui.layout_column_wrap(width=1 / 2): 
         with ui.card():
-            ui.card_header("Shortest Wait Time")
+            ui.card_header("Shortest Wait", class_= "text-info")
             @render.text
             def wait_min_text():
                 return short_wait
 
 # Display duration and wait times
         with ui.card():
-            ui.card_header("Longest Wait Time")
+            ui.card_header("Longest Wait", class_="text-danger")
         
             @render.text
             def wait_max_text():
@@ -99,14 +99,14 @@ with ui.sidebar(open="open"):
 
 # Display duration and wait times
         with ui.card():
-            ui.card_header("Shortest Duration")
+            ui.card_header("Shortest Duration", class_= "text-info")
             @render.text
             def dur_min_text():
                 return short_dur
 
 # Display duration and wait times
         with ui.card():
-            ui.card_header("Longest Duration")
+            ui.card_header("Longest Duration", class_="text-danger")
             @render.text
             def dur_max_text():
                 return long_dur
