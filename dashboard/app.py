@@ -43,8 +43,9 @@ reactive_value_wrapper = reactive.value(deque(maxlen=DEQUE_SIZE))
 def reactive_recordings():
     reactive.invalidate_later(UPDATE_INTERVAL_SECS)
 
-    duration = round(random.uniform(input.dur_low(),input.dur_high()),3)
-    waiting = round(random.uniform(input.wait_low(),input.wait_high()),0)
+    # Data grid data generation
+    duration = round(random.uniform(input.short_dur(),input.long_dur()),3)
+    waiting = round(random.uniform(input.short_wait(),input.long_wait()),0)
     kind = random.choice(["short","long"])
     new_recording_entry = {"duration":duration, "waiting":waiting, "kind":kind}
 
@@ -57,7 +58,6 @@ def reactive_recordings():
     latest_recording_entry = new_recording_entry
 
     return deque_snapshot, df, latest_recording_entry
-
 
 # UI Page Layout
 ui.page_opts(title="Geyser Activity", fillable=True)
@@ -181,12 +181,10 @@ with ui.layout_columns(col_widths=(8, 4)):
         
         @render.data_frame
         def display_latest_df():
-             return render.DataGrid(geyser_df.iloc[5:]) 
+#             return render.DataGrid(geyser_df.iloc[5:]) 
 #            I tried to create a table that simulated live data but it doesn't work
-#            deque_snapshot, df, latest_recording_entry = reactive_recordings()
-#            return render.DataGrid(df, width="100%")
-
-
+            deque_snapshot, df, latest_recording_entry = reactive_recordings()
+            return render.DataGrid(df,width="100%")
 
 # Reactive calc to filter the data based upon the inputs
 @reactive.calc

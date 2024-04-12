@@ -9,3 +9,4 @@ urlopen
 seaborn
 plotly
 scipy
+statsmodels
