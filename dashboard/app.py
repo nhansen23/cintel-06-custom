@@ -30,6 +30,31 @@ theme.sandstone
 
 geyser_df = sns.load_dataset("geyser")
 
+UPDATE_INTERVAL_SECS: int = 2
+
+DEQUE_SIZE: int = 3
+reactive_value_wrapper = reactive.value(deque(maxlen=DEQUE_SIZE))
+
+@reactive.calc()
+def reactive_recordings():
+    reactive.invalidate_later(UPDATE_INTERVAL_SECS)
+
+    duration = round(random.uniform(input.dur_low(),input.dur_high()),3)
+    waiting = round(random.uniform(input.wait_low(),input.wait_high()),0)
+    kind = random.choice(["short","long"])
+    new_recording_entry = {"duration":duration, "waiting":waiting, "kind":kind}
+
+    reactive_value_wrapper.get().append(new_recording_entry)
+
+    deque_snapshot = reactive_value_wrapper.get()
+
+    df = pd.DataFrame(deque_snapshot)
+
+    latest_recording_entry = new_recording_entry
+
+    return deque_snapshot, df, latest_recording_entry
+
+
 # UI Page Layout
 ui.page_opts(title="Geyser Activity", fillable=True)
 
@@ -41,7 +66,7 @@ with ui.sidebar(open="open"):
 #        img: ImgData = {"src": "https://cdn.britannica.com/38/94438-050-1A943B1D/Old-Faithful-geyser-Yellowstone-National-Park-Wyoming.jpg", "width": "100px"}
 #        return img
         
-    # UI Page Input
+# UI Page Input
     # https://shiny.posit.co/py/components/inputs/select-single/
     ui.input_radio_buttons(
     "duration",
@@ -49,6 +74,39 @@ with ui.sidebar(open="open"):
     {"long":"Long","short":"Short","both": "Both"},
     selected="both",
     )
+
+    ui.hr()
+    
+# Display duration and wait times
+    with ui.card():
+        ui.card_header("Shortest Wait Time")
+        @render.text
+        def wait_min_text():
+            return wait_min()
+
+# Display duration and wait times
+    with ui.card():
+        ui.card_header("Longest Wait Time")
+        
+        @render.text
+        def wait_max_text():
+            return wait_max()
+
+    ui.hr()
+
+# Display duration and wait times
+    with ui.card():
+        ui.card_header("Shortest Duration")
+        @render.text
+        def dur_min_text():
+            return dur_min()
+
+# Display duration and wait times
+    with ui.card():
+        ui.card_header("Longest Duration")
+        @render.text
+        def dur_max_text():
+            return dur_max()
 
 # UI Main Panel
 # Add value boxes to show average wait and duration times for each geyser activity type
@@ -119,8 +177,12 @@ with ui.layout_columns(col_widths=(8, 4)):
         ui.card_header("Latest Recordings", class_="text-bg-secondary p-3")
         
         @render.data_frame
-        def display_latest():
-            return render.DataGrid(geyser_df.iloc[5:])
+        def display_latest_df():
+             return render.DataGrid(geyser_df.iloc[5:]) 
+#            I tried to create a table that simulated live data but it doesn't work
+#            deque_snapshot, df, latest_recording_entry = reactive_recordings()
+#            return render.DataGrid(df, width="100%")
+
 
 
 # Reactive calc to filter the data based upon the inputs
@@ -132,3 +194,19 @@ def filtered_duration_df():
     else:    
         filtered_data = geyser_df[geyser_df["kind"] == input.duration()]
         return filtered_data
+
+@reactive.calc()
+def wait_max():
+    return geyser_df[geyser_df["waiting"].max()]
+
+@reactive.calc()
+def wait_min():
+    return geyser_df[geyser_df["waiting"].min()]
+
+@reactive.calc()
+def dur_max():
+    return geyser_df[geyser_df["duration"].max()]
+
+@reactive.calc()
+def dur_min():
+    return geyser_df[geyser_df["duration"].min()]
