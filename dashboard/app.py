@@ -195,19 +195,3 @@ def filtered_duration_df():
     else:    
         filtered_data = geyser_df[geyser_df["kind"] == input.duration()]
         return filtered_data
-
-@reactive.calc()
-def wait_max():
-    return geyser_df[geyser_df["waiting"].max()]
-
-@reactive.calc()
-def wait_min():
-    return geyser_df[geyser_df["waiting"].min()]
-
-@reactive.calc()
-def dur_max():
-    return geyser_df[geyser_df["duration"].max()]
-
-@reactive.calc()
-def dur_min():
-    return geyser_df[geyser_df["duration"].min()]
