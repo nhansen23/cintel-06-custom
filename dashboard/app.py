@@ -27,10 +27,10 @@ theme.sandstone
 # ---------------------------------------------------------------------------------
 
 geyser_df = sns.load_dataset("geyser")
-#short_wait = geyser_df["waiting"].min()
-#long_wait = geyser_df["waiting"].max()
-#short_dur = geyser_df["duration"].min()
-#long_dur = geyser_df["duration"].max()
+short_wait = geyser_df["waiting"].min()
+long_wait = geyser_df["waiting"].max()
+short_dur = geyser_df["duration"].min()
+long_dur = geyser_df["duration"].max()
 
 #UPDATE_INTERVAL_SECS: int = 2
 
