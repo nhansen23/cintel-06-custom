@@ -19,8 +19,6 @@ import seaborn as sns
 # Icons import
 from faicons import icon_svg
 
-from urllib.request import urlopen
-
 # Set Theme
 theme.sandstone
 
@@ -44,8 +42,8 @@ def reactive_recordings():
     reactive.invalidate_later(UPDATE_INTERVAL_SECS)
 
     # Data grid data generation
-    latest_dur = round(random.uniform(input.dur_min(),input.dur_max()),3)
-    latest_wait = random.randint(input.wait_min(),input.wait_max())
+#    latest_dur = round(random.uniform(input.dur_min(),input.dur_max()),3)
+#    latest_wait = random.randint(input.wait_min(),input.wait_max())
     latest_kind = random.choice(["short","long"])
     new_recording_entry = {"duration":latest_dur, "waiting":latest_wait, "kind":latest_kind}
 
@@ -195,3 +193,19 @@ def filtered_duration_df():
     else:    
         filtered_data = geyser_df[geyser_df["kind"] == input.duration()]
         return filtered_data
+
+#@reactive.calc()
+#def wait_max():
+#    return geyser_df[geyser_df["waiting"].max()]
+
+#@reactive.calc()
+#def wait_min():
+#    return geyser_df[geyser_df["waiting"].min()]
+
+#@reactive.calc()
+#def dur_max():
+#    return geyser_df[geyser_df["duration"].max()]
+
+#@reactive.calc()
+#def dur_min():
+#    return geyser_df[geyser_df["duration"].min()]
