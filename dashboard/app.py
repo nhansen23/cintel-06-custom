@@ -27,15 +27,15 @@ theme.sandstone
 # ---------------------------------------------------------------------------------
 
 geyser_df = sns.load_dataset("geyser")
-short_wait = geyser_df["waiting"].min()
-long_wait = geyser_df["waiting"].max()
-short_dur = geyser_df["duration"].min()
-long_dur = geyser_df["duration"].max()
+#short_wait = geyser_df["waiting"].min()
+#long_wait = geyser_df["waiting"].max()
+#short_dur = geyser_df["duration"].min()
+#long_dur = geyser_df["duration"].max()
 
-UPDATE_INTERVAL_SECS: int = 2
+#UPDATE_INTERVAL_SECS: int = 2
 
-DEQUE_SIZE: int = 5
-reactive_value_wrapper = reactive.value(deque(maxlen=DEQUE_SIZE))
+#DEQUE_SIZE: int = 5
+#reactive_value_wrapper = reactive.value(deque(maxlen=DEQUE_SIZE))
 
 #@reactive.calc()
 #def reactive_recordings():
