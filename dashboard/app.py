@@ -36,7 +36,7 @@ long_dur = geyser_df["duration"].max()
 
 UPDATE_INTERVAL_SECS: int = 2
 
-DEQUE_SIZE: int = 3
+DEQUE_SIZE: int = 5
 reactive_value_wrapper = reactive.value(deque(maxlen=DEQUE_SIZE))
 
 @reactive.calc()
@@ -44,27 +44,27 @@ def reactive_recordings():
     reactive.invalidate_later(UPDATE_INTERVAL_SECS)
 
     # Data grid data generation
-    duration = round(random.uniform(input.short_dur(),input.long_dur()),3)
-    waiting = random.randint(input.short_wait(),input.long_wait())
-    kind = random.choice(["short","long"])
-    new_recording_entry = {"duration":duration, "waiting":waiting, "kind":kind}
+    latest_dur = round(random.uniform(input.dur_min(),input.dur_max()),3)
+    latest_wait = random.randint(input.wait_min(),input.wait_max())
+    latest_kind = random.choice(["short","long"])
+    new_recording_entry = {"duration":latest_dur, "waiting":latest_wait, "kind":latest_kind}
 
     reactive_value_wrapper.get().append(new_recording_entry)
 
     deque_snapshot = reactive_value_wrapper.get()
 
-    df = pd.DataFrame(deque_snapshot)
+    latest_df = pd.DataFrame(deque_snapshot)
 
     latest_recording_entry = new_recording_entry
 
-    return deque_snapshot, df, latest_recording_entry
+    return deque_snapshot, latest_df, latest_recording_entry
 
 # UI Page Layout
 ui.page_opts(title="Geyser Activity", fillable=True)
 
 # UI Sidebar
 with ui.sidebar(open="open"):
-
+        
 #    @render.image 
 #    def image():
 #        img: ImgData = {"src": "https://cdn.britannica.com/38/94438-050-1A943B1D/Old-Faithful-geyser-Yellowstone-National-Park-Wyoming.jpg", "width": "100px"}
@@ -178,13 +178,13 @@ with ui.layout_columns(col_widths=(8, 4)):
     # Placeholder to simulate obtaining the latest geyser activity recordings
     with ui.card(full_screen=True, min_height="50%"):
         ui.card_header("Latest Recordings", class_="text-bg-secondary p-3")
-        
+            
         @render.data_frame
         def display_latest_df():
-#             return render.DataGrid(geyser_df.iloc[5:]) 
+             return render.DataGrid(geyser_df.sample(5)) 
 #            I tried to create a table that simulated live data but it doesn't work
-            deque_snapshot, df, latest_recording_entry = reactive_recordings()
-            return render.DataGrid(df,width="100%")
+#            deque_snapshot, latest_df, latest_recording_entry = reactive_recordings()
+#            return render.DataGrid(latest_df,width="100%")
 
 # Reactive calc to filter the data based upon the inputs
 @reactive.calc
