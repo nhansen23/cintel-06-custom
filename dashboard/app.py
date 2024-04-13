@@ -37,25 +37,25 @@ UPDATE_INTERVAL_SECS: int = 2
 DEQUE_SIZE: int = 5
 reactive_value_wrapper = reactive.value(deque(maxlen=DEQUE_SIZE))
 
-@reactive.calc()
-def reactive_recordings():
-    reactive.invalidate_later(UPDATE_INTERVAL_SECS)
+#@reactive.calc()
+#def reactive_recordings():
+#    reactive.invalidate_later(UPDATE_INTERVAL_SECS)
 
     # Data grid data generation
 #    latest_dur = round(random.uniform(input.dur_min(),input.dur_max()),3)
 #    latest_wait = random.randint(input.wait_min(),input.wait_max())
-    latest_kind = random.choice(["short","long"])
-    new_recording_entry = {"duration":latest_dur, "waiting":latest_wait, "kind":latest_kind}
+#    latest_kind = random.choice(["short","long"])
+#    new_recording_entry = {"duration":latest_dur, "waiting":latest_wait, "kind":latest_kind}
 
-    reactive_value_wrapper.get().append(new_recording_entry)
+#    reactive_value_wrapper.get().append(new_recording_entry)
 
-    deque_snapshot = reactive_value_wrapper.get()
+#    deque_snapshot = reactive_value_wrapper.get()
 
-    latest_df = pd.DataFrame(deque_snapshot)
+#    latest_df = pd.DataFrame(deque_snapshot)
 
-    latest_recording_entry = new_recording_entry
+#    latest_recording_entry = new_recording_entry
 
-    return deque_snapshot, latest_df, latest_recording_entry
+#    return deque_snapshot, latest_df, latest_recording_entry
 
 # UI Page Layout
 ui.page_opts(title="Geyser Activity", fillable=True)
